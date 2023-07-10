@@ -26,21 +26,22 @@ This project uses the MineRL library for reinforcement learning in the Minecraft
 
 1. Install Java Development Kit (JDK) 8:
 
-   `brew tap AdoptOpenJDK/openjdk
-   brew install --cask adoptopenjdk8`
+   `brew tap AdoptOpenJDK/openjdk`
+   
+   `brew install --cask adoptopenjdk8`
 
 
-2. Install Python dependencies:
+3. Install Python dependencies:
 
    `pip install -r requirements.txt`
 
 
-3. Install the MineRL Library:
+4. Install the MineRL Library:
 
    `pip install git+https://github.com/minerllabs/minerl`
 
 
-4. Run the mineRL Python script:
+5. Run the mineRL Python script:
 
    `python mineRL.py`
 
