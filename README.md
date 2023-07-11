@@ -31,17 +31,17 @@ This project uses the MineRL library for reinforcement learning in the Minecraft
    `brew install --cask adoptopenjdk8`
 
 
-3. Install Python dependencies:
+2. Install Python dependencies:
 
    `pip install -r requirements.txt`
 
 
-4. Install the MineRL Library:
+3. Install the MineRL Library:
 
    `pip install git+https://github.com/minerllabs/minerl`
 
 
-5. Run the mineRL Python script:
+4. Run the mineRL Python script:
 
    `python mineRL.py`
 
