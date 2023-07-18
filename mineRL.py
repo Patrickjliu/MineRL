@@ -16,8 +16,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from collections import OrderedDict 
 
-# Silicon Chip GPU Acceleration -- Comment out if not using Silicon Chip
+# Silicon Chip GPU Acceleration -- Comment out if not using a Silicon Chip
 device = "mps" if torch.backends.mps.is_available() else "cpu"
+
+# Nvidia GPU Acceleration -- Comment out if not using a Nvidia GPU
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # Logging
 # import logging
@@ -71,7 +74,7 @@ env = gym.make("MineRLObtainDiamondShovel-v0")
 input_shape = env.observation_space['pov'].shape
 num_actions = 22
 
-cnn = CNN(input_shape, num_actions)
+cnn = CNN(input_shape, num_actions).to(device)
 optimizer = optim.Adam(cnn.parameters(), lr=0.00005)  # Set up optimizer
 
 # env.seed(21)
@@ -111,7 +114,7 @@ for episode in range(num_episodes):
     while True:
 
         state = torch.tensor(state['pov'].copy(), dtype=torch.float32).permute(2, 0, 1).unsqueeze(0)
-
+        state = state.to(device)
         discreteActions, camera = cnn(state)
 
         camera = camera.tolist()[0]
@@ -157,11 +160,6 @@ for episode in range(num_episodes):
 
         next_state, reward, done, info = env.step(action_dict) # Take action in the environment
 
-        # print("Action(s) Taken: ")
-        # for key, value in action_dict.items():
-        #     if np.any(value != 0):
-        #         print(f"{key}: {value}")
-
         episode_rewards.append(reward)  # Store the reward
 
         log_probs = log_prob[0] + log_prob_cameraX + log_prob_cameraY
@@ -189,7 +187,7 @@ for episode in range(num_episodes):
 
             loss.backward() # Backpropagate - calculate gradients of the loss with respect to model parameters
 
-            nn.utils.clip_grad_norm_(cnn.parameters(), max_norm=1.0)
+            nn.utils.clip_grad_norm_(cnn.parameters(), max_norm=100)
 
             optimizer.step() # Update parameters - adjust model parameters based on gradients using optimizer
 

@@ -21,6 +21,31 @@ This project uses the MineRL library for reinforcement learning in the Minecraft
 - NumPy
 
 
+## Installation (Windows 11)
+
+
+1. Install Java Development Kit (JDK) 8:
+
+   `https://www.oracle.com/java/technologies/downloads/#java8-windows`
+
+Follow the link and install JDK 8. Install x64 Version.
+
+
+2. Install Python dependencies:
+
+   `pip install -r requirements.txt`
+
+
+3. Install the MineRL Library:
+
+   `pip install git+https://github.com/minerllabs/minerl`
+
+
+4. Run the mineRL Python script:
+
+   `python mineRL.py`
+
+
 ## Installation (MAC)
 
 
@@ -31,17 +56,17 @@ This project uses the MineRL library for reinforcement learning in the Minecraft
    `brew install --cask adoptopenjdk8`
 
 
-3. Install Python dependencies:
+2. Install Python dependencies:
 
    `pip install -r requirements.txt`
 
 
-4. Install the MineRL Library:
+3. Install the MineRL Library:
 
    `pip install git+https://github.com/minerllabs/minerl`
 
 
-5. Run the mineRL Python script:
+4. Run the mineRL Python script:
 
    `python mineRL.py`
 
