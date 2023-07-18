@@ -15,6 +15,7 @@ from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import OrderedDict 
+import torchvision.transforms as transforms
 
 # Silicon Chip GPU Acceleration -- Comment out if not using a Silicon Chip
 device = "mps" if torch.backends.mps.is_available() else "cpu"
@@ -29,17 +30,17 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 class CNN(nn.Module):
     def __init__(self, input_shape, num_actions):
         super(CNN, self).__init__()
-        self.conv1 = nn.Conv2d(input_shape[2], 8, kernel_size=3, stride=1, padding=1)
+        self.conv1 = nn.Conv2d(input_shape[2], 16, kernel_size=3, stride=1, padding=1)
         # self.relu1 = nn.ReLU()
         self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
         # self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.relu2 = nn.ReLU()
 
-        self.fc1_float = nn.Linear(8 * 180 * 320, 32)  # Adjusted based on new input shape
+        self.fc1_float = nn.Linear(16 * 90 * 160, 32)  # Adjusted based on new input shape
         self.relu3_float = nn.ReLU()
         self.fc2_float = nn.Linear(32, 2)
 
-        self.fc1 = nn.Linear(8 * 180 * 320, 32)  # Adjusted based on new input shape
+        self.fc1 = nn.Linear(16 * 90 * 160, 32)  # Adjusted based on new input shape
         self.relu3 = nn.ReLU()
         self.fc2 = nn.Linear(32, 22)
 
@@ -114,7 +115,14 @@ for episode in range(num_episodes):
     while True:
 
         state = torch.tensor(state['pov'].copy(), dtype=torch.float32).permute(2, 0, 1).unsqueeze(0)
+
+        # Resize the image
+        resize = transforms.Resize((state.shape[2] // 2, state.shape[3] // 2))
+        state = resize(state)
+        state = normalize(state)
+
         state = state.to(device)
+
         discreteActions, camera = cnn(state)
 
         camera = camera.tolist()[0]
