@@ -1,0 +1,9 @@
+2023-07-10 20:51:19 MSI process_watcher[1453] INFO Process watcher started between parent 1383 and child 1400 
+2023-07-10 20:55:39 MSI process_watcher[1453] INFO Parent is not running, hence we need terminate the child.
+2023-07-10 20:55:39 MSI process_watcher[1453] INFO About to reap process tree of 1400:launchClient.sh:/usr/bin/bash i sleeping, owner 355, printing process tree status in termination order:
+2023-07-10 20:55:39 MSI process_watcher[1453] INFO 	-1404:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1400
+2023-07-10 20:55:39 MSI process_watcher[1453] INFO 	-1400:launchClient.sh:/usr/bin/bash i sleeping, owner 355
+2023-07-10 20:55:39 MSI process_watcher[1453] INFO Trying to SIGTERM 1404:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1400
+2023-07-10 20:55:44 MSI process_watcher[1453] INFO Process 1404 survived SIGTERM; trying SIGKILL on 1404:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1400
+2023-07-10 20:55:44 MSI process_watcher[1453] INFO Process psutil.Process(pid=1404, name='java', status='terminated', started='20:51:18') terminated with exit code None
+2023-07-10 20:55:44 MSI process_watcher[1453] INFO Process psutil.Process(pid=1400, name='launchClient.sh', status='terminated', started='20:51:18') does not exist or is zombie.

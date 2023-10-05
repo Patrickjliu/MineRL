@@ -1,0 +1,9 @@
+2023-07-11 11:52:20 MSI process_watcher[1989] INFO Process watcher started between parent 1919 and child 1936 
+2023-07-11 11:57:24 MSI process_watcher[1989] INFO Parent is not running, hence we need terminate the child.
+2023-07-11 11:57:24 MSI process_watcher[1989] INFO About to reap process tree of 1936:launchClient.sh:/usr/bin/bash i sleeping, owner 1890, printing process tree status in termination order:
+2023-07-11 11:57:24 MSI process_watcher[1989] INFO 	-1940:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1936
+2023-07-11 11:57:24 MSI process_watcher[1989] INFO 	-1936:launchClient.sh:/usr/bin/bash i sleeping, owner 1890
+2023-07-11 11:57:24 MSI process_watcher[1989] INFO Trying to SIGTERM 1940:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1936
+2023-07-11 11:57:29 MSI process_watcher[1989] INFO Process 1940 survived SIGTERM; trying SIGKILL on 1940:java:/usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java i sleeping, owner 1936
+2023-07-11 11:57:29 MSI process_watcher[1989] INFO Process psutil.Process(pid=1940, name='java', status='terminated', started='11:52:17') terminated with exit code None
+2023-07-11 11:57:29 MSI process_watcher[1989] INFO Process psutil.Process(pid=1936, name='launchClient.sh', status='terminated', started='11:52:17') does not exist or is zombie.

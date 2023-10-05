@@ -1,0 +1,2 @@
+[32m2023-08-02 01:52:22[0m [35mMSI[0m [34mprocess_watcher[28268][0m [1;30mINFO[0m Process watcher started between parent 20600 and child 19992 
+[32m2023-08-02 01:59:25[0m [35mMSI[0m [34mprocess_watcher[28268][0m [1;30mINFO[0m Child is not running anymore, launcher can terminate.

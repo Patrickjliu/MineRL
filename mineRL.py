@@ -23,6 +23,8 @@ device = "mps" if torch.backends.mps.is_available() else "cpu"
 # Nvidia GPU Acceleration -- Comment out if not using a Nvidia GPU
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+print('Device: {}'.format(device))
+
 # Logging
 # import logging
 # logging.basicConfig(level=logging.DEBUG)
@@ -31,25 +33,36 @@ class CNN(nn.Module):
     def __init__(self, input_shape, num_actions):
         super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(input_shape[2], 16, kernel_size=3, stride=1, padding=1)
-        # self.relu1 = nn.ReLU()
-        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-        # self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
+        self.relu1 = nn.ReLU()
+        self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
         self.relu2 = nn.ReLU()
+        self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv3 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)
+        self.relu3 = nn.ReLU()
+        self.pool3 = nn.MaxPool2d(kernel_size=2, stride=2)
+        self.conv4 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1)
 
-        self.fc1_float = nn.Linear(16 * 90 * 160, 32)  # Adjusted based on new input shape
+        self.fc1_float = nn.Linear(56320, 32)  # Adjusted based on new input shape
         self.relu3_float = nn.ReLU()
         self.fc2_float = nn.Linear(32, 2)
 
-        self.fc1 = nn.Linear(16 * 90 * 160, 32)  # Adjusted based on new input shape
+        self.fc1 = nn.Linear(56320, 32)  # Adjusted based on new input shape
         self.relu3 = nn.ReLU()
         self.fc2 = nn.Linear(32, 22)
 
     def forward(self, x):
         x = self.conv1(x)
-        # x = self.relu1(x)
-        x = self.pool(x)
-        # x = self.conv2(x)
+        x = self.relu1(x)
+        x = self.pool1(x)
+        x = self.conv2(x)
         x = self.relu2(x)
+        x = self.pool2(x)
+        x = self.conv3(x)
+        x = self.relu3(x)
+        x = self.pool3(x)
+        x = self.conv4(x)
+
         x = x.view(x.size(0), -1)
 
         x_float = self.fc1_float(x)
@@ -82,9 +95,9 @@ optimizer = optim.Adam(cnn.parameters(), lr=0.00005)  # Set up optimizer
 state = env.reset()
 
 done = False
-num_episodes = 5  # Number of episodes to run
+num_episodes = 50  # Number of episodes to run
 gamma = 0.99  # Discount factor for cumulative rewards
-max_episode_steps = 500
+max_episode_steps = 200
 
 progress_bar = tqdm(total=num_episodes, desc = "Episodes", unit="episode", ncols=80) # Set up progress bar for episodes
 
@@ -117,7 +130,7 @@ for episode in range(num_episodes):
         state = torch.tensor(state['pov'].copy(), dtype=torch.float32).permute(2, 0, 1).unsqueeze(0)
 
         # Resize the image
-        resize = transforms.Resize((state.shape[2] // 2, state.shape[3] // 2))
+        resize = transforms.Resize((state.shape[2] // 2, state.shape[3] // 2), antialias=False)
         state = resize(state)
         state = normalize(state)
 
@@ -168,6 +181,24 @@ for episode in range(num_episodes):
 
         next_state, reward, done, info = env.step(action_dict) # Take action in the environment
 
+        if action_dict['sprint'] == 1:
+            reward += 1.0
+
+        if action_dict['forward'] == 1:
+            reward += 0.02
+
+        if action_dict['right'] == 1:
+            reward += 0.02
+
+        if action_dict['left'] == 1:
+            reward += 0.02
+
+        if action_dict['jump'] == 1:
+            reward += 0.015
+
+        if action_dict['attack'] == 1:
+            reward += 0.035
+
         episode_rewards.append(reward)  # Store the reward
 
         log_probs = log_prob[0] + log_prob_cameraX + log_prob_cameraY
@@ -185,9 +216,8 @@ for episode in range(num_episodes):
                 # Store the calculated cumulative rewards in the discounted_rewards array
                 discounted_rewards[t] = cumulative_rewards
 
-            discounted_rewards = torch.tensor(discounted_rewards, dtype=torch.float32)
-  
-            episode_log_probs = torch.stack(episode_log_probs, dim = -1)
+            discounted_rewards = torch.tensor(discounted_rewards, dtype=torch.float32).to(device)
+            episode_log_probs = torch.stack(episode_log_probs, dim = -1).to(device)
 
             loss = -torch.sum(episode_log_probs * discounted_rewards)
 
@@ -215,7 +245,7 @@ for episode in range(num_episodes):
         if steps % 100 == 0:
             print(f"Steps: {steps}")
 
-        # env.render()
+        env.render()
         
 
     progress_bar.update(1)

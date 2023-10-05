@@ -1,0 +1,2 @@
+2023-07-11 12:01:05 MSI process_watcher[2335] INFO Process watcher started between parent 2264 and child 2282 
+2023-07-11 12:03:42 MSI process_watcher[2335] INFO Child is not running anymore, launcher can terminate.
